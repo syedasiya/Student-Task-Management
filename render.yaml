@@ -2,6 +2,7 @@ services:
   - type: web
     name: tandem-student-task-manager
     runtime: node
+    plan: free
     buildCommand: npm install
     startCommand: npm start
     envVars:
