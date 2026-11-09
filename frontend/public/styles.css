@@ -64,6 +64,8 @@ button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px s
 .topbar-actions { display: flex; align-items: center; gap: 13px; }
 .search-box { width: 218px; height: 35px; display: flex; align-items: center; gap: 8px; padding: 0 9px; border: 1px solid #e8ebe4; border-radius: 6px; background: #fff; color: #9ba099; }
 .search-box svg { width: 16px; flex: 0 0 16px; }
+.search-toggle { width: 18px; height: 24px; flex: 0 0 18px; display: grid; place-items: center; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.search-toggle svg { width: 16px; }
 .search-box input { width: 100%; min-width: 0; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 11px; }
 .search-box input::placeholder { color: #a9ada7; }
 .search-box kbd { padding: 2px 5px; border: 1px solid #ebede7; border-radius: 3px; color: #a6aaa4; font: 10px var(--font-body); }
@@ -194,8 +196,8 @@ h2 { margin-bottom: 0; font: 700 15px/1.3 var(--font-display); }
 @media (max-width: 600px) {
   .topbar { height: 58px; padding: 0 14px; } .breadcrumbs { font-size: 11px; } .topbar-actions { gap: 7px; }
   .search-box { width: 35px; padding: 0 9px; border-color: transparent; background: transparent; }
-  .search-box:focus-within { position: absolute; z-index: 2; right: 87px; left: 125px; width: auto; border-color: #e8ebe4; background: #fff; }
-  .search-box input, .search-box kbd { display: none; } .search-box:focus-within input { display: block; } .calendar-button { display: none; }
+  .search-box.is-open { position: absolute; z-index: 2; right: 87px; left: 125px; width: auto; border-color: #e8ebe4; background: #fff; }
+  .search-box input, .search-box kbd { display: none; } .search-box.is-open input { display: block; } .calendar-button { display: none; }
   .page-wrap { padding: 27px 15px 18px; } .greeting-row { align-items: flex-start; margin-bottom: 20px; }
   h1 { font-size: 25px; } .greeting-subtitle { max-width: 250px; font-size: 11px; line-height: 1.5; }
   .greeting-row > .primary-button { flex: 0 0 auto; min-height: 36px; margin-top: 20px; padding: 0 10px; font-size: 10px; }
@@ -466,6 +468,9 @@ body[data-theme="dark"] .form-label textarea { border-color: #41435a; background
 .profile-panel h2 { margin: 6px 0 19px; color: #383a57; font-size: 17px; }
 .profile-panel .primary-button { justify-self: start; margin-top: 3px; }
 .profile-large-avatar { width: 50px; height: 50px; display: grid; place-items: center; border: 3px solid #e7e5ff; border-radius: 50%; background: #f0eaff; color: #665fc6; font: 700 18px var(--font-display); }
+.profile-heading-actions { display: flex; align-items: center; gap: 10px; }
+.signout-button { display: inline-flex; align-items: center; gap: 7px; }
+.signout-button svg { width: 15px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .password-control { position: relative; display: block; }
 .password-control input { padding-right: 55px; }
 .password-toggle { position: absolute; top: 50%; right: 8px; padding: 4px; border: 0; background: transparent; color: #6763c6; font-size: 9px; cursor: pointer; transform: translateY(-50%); }

@@ -240,6 +240,7 @@ function renderProfile() {
   $('#profile-name-input').value = state.user.name || '';
   $('#profile-email-input').value = state.user.email || '';
   $('#profile-large-avatar').textContent = initial(state.user.name);
+  $('#signout-button').hidden = !state.isCloud;
 }
 async function saveProfile(event) {
   event.preventDefault();
@@ -356,16 +357,23 @@ function setView(view) {
   if (view === 'calendar') renderCalendar();
   if (view === 'profile') renderProfile();
 }
+function signOut() {
+  if (!state.isCloud) return;
+  state.token = null;
+  state.user = { name: 'Sam Student', email: 'sam@student.demo' };
+  state.tasks = loadTasks();
+  state.isCloud = false;
+  state.query = '';
+  elements.search.value = '';
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+  setScreen('landing');
+  render();
+  showToast('Signed out successfully.');
+}
 function openAuth(mode = 'login') {
   if (state.isCloud) {
-    state.token = null;
-    state.user = { name: 'Sam Student', email: 'sam@student.demo' };
-    state.tasks = loadTasks();
-    state.isCloud = false;
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
-    render();
-    showToast('Signed out. Your demo workspace is ready.');
+    signOut();
     return;
   }
   state.authMode = mode;
@@ -538,6 +546,7 @@ $('#calendar-link').addEventListener('click', () => setView('calendar'));
 $('#today-button').addEventListener('click', () => setView('calendar'));
 $('#account-button').addEventListener('click', () => state.isCloud ? setView('profile') : openAuth());
 $('#top-avatar').addEventListener('click', () => state.isCloud ? setView('profile') : openAuth());
+$('#signout-button').addEventListener('click', signOut);
 $('#focus-button').addEventListener('click', startFocus);
 $('#mobile-menu').addEventListener('click', () => $('#sidebar').classList.toggle('is-open'));
 $('#add-course').addEventListener('click', () => { showTaskModal(); $('#task-subject').focus(); });
@@ -559,6 +568,16 @@ $$('.filter-tab').forEach((tab) => tab.addEventListener('click', () => {
   renderTasks();
 }));
 elements.search.addEventListener('input', () => { state.query = elements.search.value.trim().toLowerCase(); renderTasks(); });
+$('#search-toggle').addEventListener('click', () => {
+  const searchBox = $('#search-box');
+  if (window.matchMedia('(max-width: 600px)').matches) {
+    const isOpen = searchBox.classList.toggle('is-open');
+    if (isOpen) elements.search.focus();
+    else elements.search.blur();
+    return;
+  }
+  elements.search.focus();
+});
 $('#sort-button').addEventListener('click', () => { state.sortDescending = !state.sortDescending; renderTasks(); });
 $('#priority-filter').addEventListener('change', (event) => { state.priorityFilter = event.target.value; renderTasks(); });
 $$('[data-task-view]').forEach((button) => button.addEventListener('click', () => {
@@ -568,7 +587,15 @@ $$('[data-task-view]').forEach((button) => button.addEventListener('click', () =
 }));
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') { closeTaskModal(); closeDeleteModal(); elements.authModal.hidden = true; }
-  if (event.key === '/' && !['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) { event.preventDefault(); elements.search.focus(); }
+  if (event.key === 'Escape' && $('#search-box').classList.contains('is-open')) {
+    $('#search-box').classList.remove('is-open');
+    elements.search.blur();
+  }
+  if (event.key === '/' && !['INPUT', 'SELECT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+    event.preventDefault();
+    $('#search-box').classList.add('is-open');
+    elements.search.focus();
+  }
   if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'n') { event.preventDefault(); showTaskModal(); }
 });
 
